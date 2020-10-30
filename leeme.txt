@@ -1,0 +1,12 @@
+Se ha incluido una página que muestra los concejos de las comarcas por las que pasa el “Camino Francés” del Camino de Santiago, 
+camino el cual se ha escogido en el proyecto final, en el último tramo del recorrido, esto es, en la provincia de A Coruña.
+
+Para ello se han cruzado dos shps diferentes, uno de concejos y otro de provincias, ambos de Galicia. 
+
+El shp de los concejos ha sido flitrado por las comarcas por las que pasaba el camino Fránces del camino de Santiago en Galicia, siendo estas: 
+Santiago, Arzúa, Terra De Melide, A Ulloa, Lugo, Sarria y Os Ancares. 
+
+El shp resultante ha sido cruzado con el de provincias para quedarse solo con aquellos situados en A Coruña. 
+
+Finalmente, el shp obtenido ha sido convertido a geoJSON y mostrado mediante el uso de Leaflet. 
+En donde se representan los concejos filtrados como polygon y el nombre de las comarcas que los contienen como marker.

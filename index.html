@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Leaflet con GeoJSON</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="leaflet/leaflet.css" />
+		<script src="leaflet/leaflet.js"></script>
+	</head>
+	<body>
+	    <h2>Lucía Blanco Rodríguez</h2>
+		<div id='map' style="min-height:90vh; min-width:90vw"></div>
+		<!-- Este fichero contiene las features en una variable llamada "resultado" -->
+		<script src="geojson_creado.js" type="text/javascript"></script>
+		<script>
+			/* 
+				Leaflet utiliza "L" como variable para acceder a su API
+				Instanciamos el mapa en la id "map" y lo centramos en un punto (Santiago)
+				con un determinado zoom (10)
+			*/
+			var map = L.map('map').setView([42.8801996,-8.5797891], 10);
+
+			/*
+				Establecemos qué vamos a utilizar como base para el dibujado.
+				En este caso utilizamos OSM porque es gratuito y no es necesario acceso.
+				Existen alternativas como mapbox, por poner un ejemplo.
+				"Attribution --> Deberíamos acostumbrarnos a este tipo de prácticas.
+			*/
+			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 18,
+				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+						'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+						'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+				id: 'mapbox.light'
+			}).addTo(map);
+
+			/*
+			 * Añade un popup a una capa a partir de la información de la feature.
+			 * Esta función será pasada como parámetro para que se invoque cada vez
+			 * que se dibuje una feature en el mapa.
+			 * TAMBIEN PODRÍAN CENTRALIZARSE AQUÍ OTROS TANTOS PROCESOS
+			*/
+			function onEachFeature(feature, layer) {
+				var popupContent = "<p>Atributos:</p>";
+
+				/*	
+					Aquí comprobamos si la feature tiene atributos (properties) y si además
+					tiene uno denominado "Texto". En ese caso, vincula su valor al popup.
+				 */
+                console.log(feature.properties);
+                
+                if (feature.properties && feature.properties.CodCOM) {
+					popupContent += "<p>CodCOM:"+feature.properties.CodCOM+"</p>";
+				}
+                if (feature.properties && feature.properties.CodPROV) {
+					popupContent += "<p>CodPROV:"+feature.properties.CodPROV+"</p>";
+				}
+                if (feature.properties && feature.properties.Comarca) {
+					popupContent += "<p>Comarca:"+feature.properties.Comarca+"</p>";
+				}
+                if (feature.properties && feature.properties.Provincia) {
+					popupContent += "<p>Provincia:"+feature.properties.Provincia+"</p>";
+				}
+                if (feature.properties && feature.properties.Concello) {
+					popupContent += "<p>Concello:"+feature.properties.Concello+"</p>";
+				}
+
+				//Vinculamos el popup a la capa.
+				layer.bindPopup(popupContent);
+			}
+
+			/*
+			* Esta función devuelve si se dibuja (true) o no (false) la feature en el mapa.
+			* Esta función será pasada como parámetro al instanciar la capa geoJSON.
+			*/
+			function filtrar(feature,layer)
+			{
+				return true;
+			}
+
+			/*
+			* Esta función aplica estilo a una feature concreta.
+			* Puede accederse a los atributos de la feature para variar el estilo.
+			* Esta función será pasada como parámetro al instanciar la capa geoJSON.
+			*/		
+			function aplicarEstilo(feature,layer)
+			{
+                //if (feature.properties && feature.properties.color ....
+				return {color: 'blue', fillColor: 'black', fillOpacity: 0.4};
+                
+			}
+
+			/* Añadimos al mapa una capa GeoJSON basada en la variable "resultado" que
+			*  importamos a través del "geojson_creado.js".
+			*/
+			L.geoJSON(resultado, {
+				filter: filtrar,
+				style: aplicarEstilo,
+				onEachFeature: onEachFeature
+			}).addTo(map);
+
+			// Añadimos las comarcas
+            // Santiago
+			L.marker([42.8801996,-8.5797891],{
+				title: "Comarca de Santiago",
+				draggable: false,
+				opacity: 1
+			}).bindPopup('Comarca de Santiago')
+			.addTo(map);
+            // Arzúa
+            L.marker([42.9286821,-8.169897],{
+				title: "Comarca de Arzúa",
+				draggable: false,
+				opacity: 1
+			}).bindPopup('Comarca de Arzúa')
+			.addTo(map);
+            // Terra De Melide
+            L.marker([42.9820731,-8.180759],{
+				title: "Comarca de Terra De Melide",
+				draggable: false,
+				opacity: 1
+			}).bindPopup('Comarca de Terra De Melide')
+			.addTo(map);
+
+		</script>
+		<p>Concellos de las Comarcas por las que pasa el “Camino Francés” del Camino de Santiago en la provincia de A Coruña. 
+	    Para ver información del proceso consultar "leeme.txt"</p>
+	</body>
+</html>
